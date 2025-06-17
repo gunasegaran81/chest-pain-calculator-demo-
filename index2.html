@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chest Pain Risk Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #1a202c;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            background: linear-gradient(to right, #ff6f61, #2dd4bf);
+            color: #ffffff;
+            text-align: center;
+            padding: 15px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 15px 15px 0 0;
+            font-size: 2em;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 5px solid #facc15;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+        .section:nth-child(2) { border-left-color: #ec4899; }
+        .section:nth-child(3) { border-left-color: #34d399; }
+        .section h2 {
+            color: #ff6f61;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+            font-weight: 500;
+            color: #1a202c;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            background: #edf2f7;
+        }
+        button {
+            background-color: #34d399;
+            color: #ffffff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(52, 211, 153, 0.4);
+            transition: transform 0.2s;
+        }
+        button:hover {
+            background-color: #22c55e;
+            transform: scale(1.05);
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: 700;
+            color: #dc2626;
+            background: #fefcbf;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chest Pain Risk Calculator</h1>
+
+        <div class="section">
+            <h2>TIMI Score</h2>
+            <label><input type="checkbox" name="timi"> Age ≥ 65</label>
+            <label><input type="checkbox" name="timi"> ≥3 Risk factors</label>
+            <label><input type="checkbox" name="timi"> Known CAD (≥50%)</label>
+            <label><input type="checkbox" name="timi"> ASA in last 7 days</label>
+            <label><input type="checkbox" name="timi"> ≥2 Angina episodes in 24h</label>
+            <label><input type="checkbox" name="timi"> ST deviation ≥0.5mm</label>
+            <label><input type="checkbox" name="timi"> Elevated troponin</label>
+        </div>
+
+        <div class="section">
+            <h2>HEART Score</h2>
+            <div>
+                <h3>History:</h3>
+                <label><input type="radio" name="history"> Slightly suspicious</label>
+                <label><input type="radio" name="history"> Moderately suspicious</label>
+                <label><input type="radio" name="history"> Highly suspicious</label>
+            </div>
+            <div>
+                <h3>ECG:</h3>
+                <label><input type="radio" name="ecg"> Normal</label>
+                <label><input type="radio" name="ecg"> Non-specific repolarization</label>
+                <label><input type="radio" name="ecg"> Significant ST depression</label>
+            </div>
+            <div>
+                <h3>Age:</h3>
+                <label><input type="radio" name="age"> <45</label>
+                <label><input type="radio" name="age"> 45–65</label>
+                <label><input type="radio" name="age"> >65</label>
+            </div>
+            <div>
+                <h3>Risk Factors:</h3>
+                <label><input type="radio" name="risk"> None</label>
+                <label><input type="radio" name="risk"> 1–2 or known CAD</label>
+                <label><input type="radio" name="risk"> ≥3 or known CAD</label>
+            </div>
+            <div>
+                <h3>Troponin:</h3>
+                <label><input type="radio" name="troponin"> Normal</label>
+                <label><input type="radio" name="troponin"> 1–2x normal</label>
+                <label><input type="radio" name="troponin"> >2x normal</label>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>GRACE Score (Simplified)</h2>
+            <label>Age: <input type="number" name="grace-age"></label>
+            <label>Systolic BP: <input type="number" name="grace-bp"></label>
+            <label>Heart Rate: <input type="number" name="grace-hr"></label>
+            <label>Creatinine (mg/dL): <input type="number" name="grace-creatinine"></label>
+            <div>
+                <h3>Killip Class:</h3>
+                <label><input type="radio" name="killip"> I</label>
+                <label><input type="radio" name="killip"> II</label>
+                <label><input type="radio" name="killip"> III</label>
+                <label><input type="radio" name="killip"> IV</label>
+            </div>
+            <div class="result">Estimated in-hospital mortality risk: —</div>
+        </div>
+
+        <button onclick="calculateScores()">Calculate Scores</button>
+    </div>
+
+    <script>
+        function calculateScores() {
+            // Add your scoring logic here
+            alert("Calculation logic to be implemented!");
+        }
+    </script>
+</body>
+</html>
