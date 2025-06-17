@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chest Pain Risk App (Combined)</title>
+  <title>Chest Pain Risk App (Combined with SI Units)</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 1rem; background-color: #f4f4f4; max-width: 900px; margin: auto; }
     h1, h2 { color: #333; }
@@ -78,9 +78,9 @@
     <h2>GRACE Score (Full)</h2>
     <form id="graceForm">
       <label>Age: <input type="number" id="age" value="55" /></label>
-      <label>Systolic BP: <input type="number" id="sbp" value="120" /></label>
-      <label>Heart Rate: <input type="number" id="hr" value="80" /></label>
-      <label>Creatinine (mg/dL): <input type="number" id="creatinine" step="0.1" value="1.0" /></label>
+      <label>Systolic BP (mmHg): <input type="number" id="sbp" value="120" /></label>
+      <label>Heart Rate (bpm): <input type="number" id="hr" value="80" /></label>
+      <label>Creatinine (μmol/L): <input type="number" id="creatinine" step="1" value="88" /></label>
       <label>Killip Class:
         <select id="killip">
           <option value="1">I</option>
@@ -115,28 +115,24 @@
 
   <script>
     function calculate() {
-      // HEART
       const heartSelects = document.querySelectorAll('#heartForm select');
       let heartScore = 0;
       heartSelects.forEach(s => heartScore += parseInt(s.value));
       const heartRisk = heartScore <= 3 ? 'Low (<1.7%)' : heartScore <= 6 ? 'Moderate (12–16.6%)' : 'High (>50%)';
       document.getElementById('heartResult').innerHTML = `Score: ${heartScore}/10<br>Risk: ${heartRisk}`;
 
-      // TIMI
       const timiScore = document.querySelectorAll('#timiForm input[type=checkbox]:checked').length;
       const timiRisk = ['<5%', '5–8%', '8–13%', '13–20%', '20–26%', '26–41%', '41–65%', '>65%'][timiScore] || '>65%';
       document.getElementById('timiResult').innerHTML = `Score: ${timiScore}/7<br>Risk: ${timiRisk}`;
 
-      // Show GRACE form if moderate risk
       const showGrace = (heartScore >= 4 && heartScore <= 6) || (timiScore >= 3 && timiScore <= 4);
       document.getElementById('graceSection').style.display = showGrace ? 'block' : 'none';
 
-      // GRACE
       if (showGrace) {
         const age = parseInt(document.getElementById('age').value);
         const sbp = parseInt(document.getElementById('sbp').value);
         const hr = parseInt(document.getElementById('hr').value);
-        const creat = parseFloat(document.getElementById('creatinine').value);
+        const creat = parseFloat(document.getElementById('creatinine').value) / 88.4;
         const killip = parseInt(document.getElementById('killip').value);
         const arrest = parseInt(document.getElementById('arrest').value);
         const st_dev = parseInt(document.getElementById('st_dev').value);
@@ -157,5 +153,19 @@
       }
     }
   </script>
+
+<section>
+  <h2>📋 Clinical Guidance Based on GRACE Score (2025 AHA/ACC)</h2>
+  <p><strong>High GRACE Score (>140)</strong><br>
+    ➤ Recommended: <strong>Early Invasive Strategy</strong> (angiography within 24h)<br>
+    ➤ If invasive is not feasible: initiate <strong>aggressive medical therapy</strong> (Aspirin, P2Y₁₂ inhibitor, anticoagulation, statins, beta-blocker, ACEI/ARB), and perform <strong>non-invasive testing</strong> (e.g., stress echo, SPECT, CTCA) before discharge.
+  </p>
+  <p><strong>Intermediate GRACE Score (109–140)</strong><br>
+    ➤ Consider <strong>invasive approach</strong> OR <strong>ischemia-guided strategy</strong> based on patient stability, comorbidities, and availability.
+  </p>
+  <p><strong>Low GRACE Score (<109)</strong><br>
+    ➤ <strong>Ischemia-guided management</strong> is appropriate. Can use <strong>non-invasive testing</strong> (e.g., stress test or outpatient CTCA) for further evaluation if needed.
+  </p>
+</section>
 </body>
 </html>
