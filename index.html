@@ -2,103 +2,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chest Pain Risk Calculator (TIMI + HEART)</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0 auto; padding: 1rem; max-width: 600px; background-color: #f9f9f9; }
-        h2, h3 { color: #2c3e50; }
-        label { display: block; margin: 0.5rem 0; }
-        input[type="checkbox"], input[type="number"], select { margin-right: 0.5rem; }
-        button { background-color: #3498db; color: white; padding: 10px; border: none; margin-top: 1rem; cursor: pointer; width: 100%; }
-        button:hover { background-color: #2980b9; }
-        .result { margin-top: 1.5rem; padding: 1rem; background-color: #ecf0f1; border-radius: 5px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chest Pain Risk App (Combined)</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 1rem; background-color: #f4f4f4; max-width: 900px; margin: auto; }
+    h1, h2 { color: #333; }
+    section { background: #fff; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    label { display: block; margin: 0.5rem 0; }
+    select, input { margin-left: 0.5rem; }
+    button { padding: 10px; margin-top: 1rem; width: 100%; background: #007bff; color: white; border: none; border-radius: 4px; }
+    .result { margin-top: 1rem; background: #eef; padding: 1rem; border-radius: 5px; }
+  </style>
 </head>
 <body>
-    <h2>Chest Pain Risk Calculator</h2>
+  <h1>Chest Pain Risk Calculator</h1>
 
-    <h3>TIMI Score</h3>
-    <form id="timiForm">
-        <label><input type="checkbox" name="timi" value="1"> Age ≥ 65</label>
-        <label><input type="checkbox" name="timi" value="1"> ≥3 Risk factors (HTN, DM, HLD, FHx, smoking)</label>
-        <label><input type="checkbox" name="timi" value="1"> Known CAD (≥50% stenosis)</label>
-        <label><input type="checkbox" name="timi" value="1"> Aspirin use in past 7 days</label>
-        <label><input type="checkbox" name="timi" value="1"> ≥2 Angina events in past 24h</label>
-        <label><input type="checkbox" name="timi" value="1"> ST-segment deviation ≥0.5mm</label>
-        <label><input type="checkbox" name="timi" value="1"> Elevated troponin</label>
-    </form>
-
-    <h3>HEART Score</h3>
+  <section>
+    <h2>HEART Score</h2>
     <form id="heartForm">
-        <label>History:
-            <select name="history">
-                <option value="0">Slightly suspicious (0)</option>
-                <option value="1">Moderately suspicious (1)</option>
-                <option value="2">Highly suspicious (2)</option>
-            </select>
-        </label>
-        <label>ECG:
-            <select name="ecg">
-                <option value="0">Normal (0)</option>
-                <option value="1">Nonspecific repolarization (1)</option>
-                <option value="2">Significant ST-depression (2)</option>
-            </select>
-        </label>
-        <label>Age:
-            <select name="age">
-                <option value="0">&lt;45 (0)</option>
-                <option value="1">45–65 (1)</option>
-                <option value="2">&gt;65 (2)</option>
-            </select>
-        </label>
-        <label>Risk Factors:
-            <select name="riskFactors">
-                <option value="0">None (0)</option>
-                <option value="1">1–2 or known atherosclerosis (1)</option>
-                <option value="2">≥3 or known CAD (2)</option>
-            </select>
-        </label>
-        <label>Troponin:
-            <select name="troponin">
-                <option value="0">Normal (0)</option>
-                <option value="1">1–2× normal limit (1)</option>
-                <option value="2">&gt;2× normal limit (2)</option>
-            </select>
-        </label>
+      <label>History: 
+        <select>
+          <option value="0">Slightly suspicious (0)</option>
+          <option value="1">Moderately suspicious (1)</option>
+          <option value="2">Highly suspicious (2)</option>
+        </select>
+      </label>
+      <label>ECG: 
+        <select>
+          <option value="0">Normal (0)</option>
+          <option value="1">Non-specific changes (1)</option>
+          <option value="2">Significant ST-depression (2)</option>
+        </select>
+      </label>
+      <label>Age: 
+        <select>
+          <option value="0"><45 (0)</option>
+          <option value="1">45–64 (1)</option>
+          <option value="2">≥65 (2)</option>
+        </select>
+      </label>
+      <label>Risk Factors: 
+        <select>
+          <option value="0">None (0)</option>
+          <option value="1">1–2 (1)</option>
+          <option value="2">≥3 or DM (2)</option>
+        </select>
+      </label>
+      <label>Troponin: 
+        <select>
+          <option value="0">≤ normal limit (0)</option>
+          <option value="1">1–3× normal (1)</option>
+          <option value="2">>3× normal (2)</option>
+        </select>
+      </label>
     </form>
+    <div class="result" id="heartResult"></div>
+  </section>
 
-    <button onclick="calculateScores()">Calculate Risk Scores</button>
+  <section>
+    <h2>TIMI Score</h2>
+    <form id="timiForm">
+      <label><input type="checkbox"/> Age ≥65</label>
+      <label><input type="checkbox"/> ≥3 CAD risk factors</label>
+      <label><input type="checkbox"/> Known CAD (stenosis >50%)</label>
+      <label><input type="checkbox"/> ASA use in past 7 days</label>
+      <label><input type="checkbox"/> ≥2 anginal events in 24h</label>
+      <label><input type="checkbox"/> ST deviation ≥0.5mm</label>
+      <label><input type="checkbox"/> Elevated biomarkers</label>
+    </form>
+    <div class="result" id="timiResult"></div>
+  </section>
 
-    <div class="result" id="result"></div>
+  <section id="graceSection" style="display:none;">
+    <h2>GRACE Score (Full)</h2>
+    <form id="graceForm">
+      <label>Age: <input type="number" id="age" value="55" /></label>
+      <label>Systolic BP: <input type="number" id="sbp" value="120" /></label>
+      <label>Heart Rate: <input type="number" id="hr" value="80" /></label>
+      <label>Creatinine (mg/dL): <input type="number" id="creatinine" step="0.1" value="1.0" /></label>
+      <label>Killip Class:
+        <select id="killip">
+          <option value="1">I</option>
+          <option value="2">II</option>
+          <option value="3">III</option>
+          <option value="4">IV</option>
+        </select>
+      </label>
+      <label>Cardiac Arrest:
+        <select id="arrest">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </label>
+      <label>ST deviation:
+        <select id="st_dev">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </label>
+      <label>Elevated Enzymes:
+        <select id="enzymes">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </label>
+    </form>
+    <div class="result" id="graceResult"></div>
+  </section>
 
-    <script>
-        function calculateScores() {
-            const timiInputs = document.querySelectorAll('#timiForm input[type="checkbox"]:checked');
-            const timiScore = timiInputs.length;
+  <button onclick="calculate()">Calculate Scores</button>
 
-            const heartFields = ['history', 'ecg', 'age', 'riskFactors', 'troponin'];
-            let heartScore = 0;
-            heartFields.forEach(field => {
-                const val = parseInt(document.querySelector(`#heartForm select[name="${field}"]`).value);
-                heartScore += val;
-            });
+  <script>
+    function calculate() {
+      // HEART
+      const heartSelects = document.querySelectorAll('#heartForm select');
+      let heartScore = 0;
+      heartSelects.forEach(s => heartScore += parseInt(s.value));
+      const heartRisk = heartScore <= 3 ? 'Low (<1.7%)' : heartScore <= 6 ? 'Moderate (12–16.6%)' : 'High (>50%)';
+      document.getElementById('heartResult').innerHTML = `Score: ${heartScore}/10<br>Risk: ${heartRisk}`;
 
-            let riskLevel = '';
-            if (timiScore <= 1 && heartScore <= 3) {
-                riskLevel = 'Very Low Risk – Safe for Discharge';
-            } else if (heartScore <= 6) {
-                riskLevel = 'Moderate Risk – Observe and Repeat Troponin';
-            } else {
-                riskLevel = 'High Risk – Admit for Invasive Management';
-            }
+      // TIMI
+      const timiScore = document.querySelectorAll('#timiForm input[type=checkbox]:checked').length;
+      const timiRisk = ['<5%', '5–8%', '8–13%', '13–20%', '20–26%', '26–41%', '41–65%', '>65%'][timiScore] || '>65%';
+      document.getElementById('timiResult').innerHTML = `Score: ${timiScore}/7<br>Risk: ${timiRisk}`;
 
-            document.getElementById('result').innerHTML = `
-                <strong>TIMI Score:</strong> ${timiScore}/7<br>
-                <strong>HEART Score:</strong> ${heartScore}/10<br>
-                <strong>Risk Stratification:</strong> ${riskLevel}
-            `;
-        }
-    </script>
+      // Show GRACE form if moderate risk
+      const showGrace = (heartScore >= 4 && heartScore <= 6) || (timiScore >= 3 && timiScore <= 4);
+      document.getElementById('graceSection').style.display = showGrace ? 'block' : 'none';
+
+      // GRACE
+      if (showGrace) {
+        const age = parseInt(document.getElementById('age').value);
+        const sbp = parseInt(document.getElementById('sbp').value);
+        const hr = parseInt(document.getElementById('hr').value);
+        const creat = parseFloat(document.getElementById('creatinine').value);
+        const killip = parseInt(document.getElementById('killip').value);
+        const arrest = parseInt(document.getElementById('arrest').value);
+        const st_dev = parseInt(document.getElementById('st_dev').value);
+        const enzymes = parseInt(document.getElementById('enzymes').value);
+
+        let score = 0;
+        score += Math.floor(age * 0.8);
+        score += hr > 150 ? 24 : hr > 100 ? 13 : hr > 70 ? 7 : 0;
+        score += sbp < 80 ? 30 : sbp < 100 ? 20 : sbp < 120 ? 10 : 0;
+        score += creat > 2.0 ? 28 : creat > 1.5 ? 20 : creat > 1.2 ? 10 : 0;
+        score += [0, 20, 39, 59][killip - 1];
+        score += arrest ? 39 : 0;
+        score += st_dev ? 28 : 0;
+        score += enzymes ? 14 : 0;
+
+        let graceRisk = score < 109 ? "<1%" : score < 140 ? "1–3%" : ">3%";
+        document.getElementById('graceResult').innerHTML = `Score: ${score}<br>In-Hospital Mortality Risk: ${graceRisk}`;
+      }
+    }
+  </script>
 </body>
 </html>
