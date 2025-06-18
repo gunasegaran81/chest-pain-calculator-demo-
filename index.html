@@ -1,162 +1,104 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chest Pain Risk Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Chest Pain Risk Stratification Tool</title>
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #ffffff;
-            margin: 0;
-            padding: 0;
-            color: #1a202c;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            background: linear-gradient(to right, #ff6f61, #2dd4bf);
-            color: #ffffff;
-            text-align: center;
-            padding: 15px;
-            margin: -20px -20px 20px -20px;
-            border-radius: 15px 15px 0 0;
-            font-size: 2em;
-        }
-        .section {
-            margin-bottom: 20px;
-            padding: 15px;
-            border-left: 5px solid #facc15;
-            border-radius: 8px;
-            background: #f9fafb;
-        }
-        .section:nth-child(2) { border-left-color: #ec4899; }
-        .section:nth-child(3) { border-left-color: #34d399; }
-        .section h2 {
-            color: #ff6f61;
-            margin-top: 0;
-            font-size: 1.5em;
-        }
-        label {
-            display: block;
-            margin: 5px 0;
-            font-weight: 500;
-            color: #1a202c;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 6px;
-            box-sizing: border-box;
-            background: #edf2f7;
-        }
-        button {
-            background-color: #34d399;
-            color: #ffffff;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 4px 15px rgba(52, 211, 153, 0.4);
-            transition: transform 0.2s;
-        }
-        button:hover {
-            background-color: #22c55e;
-            transform: scale(1.05);
-        }
-        .result {
-            margin-top: 20px;
-            font-weight: 700;
-            color: #dc2626;
-            background: #fefcbf;
-            padding: 10px;
-            border-radius: 4px;
-        }
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+        h1 { color: #004080; }
+        label { display: block; margin-top: 10px; }
+        input[type=number] { width: 100px; }
+        section { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
+        button { margin-top: 15px; padding: 8px 12px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Chest Pain Risk Calculator</h1>
+    <h1>Chest Pain Combined Tool</h1>
 
-        <div class="section">
-            <h2>TIMI Score</h2>
-            <label><input type="checkbox" name="timi"> Age ≥ 65</label>
-            <label><input type="checkbox" name="timi"> ≥3 Risk factors</label>
-            <label><input type="checkbox" name="timi"> Known CAD (≥50%)</label>
-            <label><input type="checkbox" name="timi"> ASA in last 7 days</label>
-            <label><input type="checkbox" name="timi"> ≥2 Angina episodes in 24h</label>
-            <label><input type="checkbox" name="timi"> ST deviation ≥0.5mm</label>
-            <label><input type="checkbox" name="timi"> Elevated troponin</label>
-        </div>
+    <section>
+        <h2>🔢 Input Scores</h2>
+        <label>HEART Score: <input type="number" id="heartScore" min="0" max="10" step="1"></label>
+        <label>TIMI Score: <input type="number" id="timiScore" min="0" max="7" step="1"></label>
+        <label>GRACE Score: <input type="number" id="graceScore" min="0" max="372" step="1"></label>
+        <button onclick="calculateRisk(); provideDecisionSupport()">Calculate Risk</button>
+    </section>
 
-        <div class="section">
-            <h2>HEART Score</h2>
-            <div>
-                <h3>History:</h3>
-                <label><input type="radio" name="history"> Slightly suspicious</label>
-                <label><input type="radio" name="history"> Moderately suspicious</label>
-                <label><input type="radio" name="history"> Highly suspicious</label>
-            </div>
-            <div>
-                <h3>ECG:</h3>
-                <label><input type="radio" name="ecg"> Normal</label>
-                <label><input type="radio" name="ecg"> Non-specific repolarization</label>
-                <label><input type="radio" name="ecg"> Significant ST depression</label>
-            </div>
-            <div>
-                <h3>Age:</h3>
-                <label><input type="radio" name="age"> <45</label>
-                <label><input type="radio" name="age"> 45–65</label>
-                <label><input type="radio" name="age"> >65</label>
-            </div>
-            <div>
-                <h3>Risk Factors:</h3>
-                <label><input type="radio" name="risk"> None</label>
-                <label><input type="radio" name="risk"> 1–2 or known CAD</label>
-                <label><input type="radio" name="risk"> ≥3 or known CAD</label>
-            </div>
-            <div>
-                <h3>Troponin:</h3>
-                <label><input type="radio" name="troponin"> Normal</label>
-                <label><input type="radio" name="troponin"> 1–2x normal</label>
-                <label><input type="radio" name="troponin"> >2x normal</label>
-            </div>
-        </div>
+    <section>
+        <h2>📈 Risk Percentages</h2>
+        <div id="riskResult" style="padding: 10px; border: 1px solid #aaa; background: #eef;"></div>
+    </section>
 
-        <div class="section">
-            <h2>GRACE Score (Simplified)</h2>
-            <label>Age: <input type="number" name="grace-age"></label>
-            <label>Systolic BP: <input type="number" name="grace-bp"></label>
-            <label>Heart Rate: <input type="number" name="grace-hr"></label>
-            <label>Creatinine (mg/dL): <input type="number" name="grace-creatinine"></label>
-            <div>
-                <h3>Killip Class:</h3>
-                <label><input type="radio" name="killip"> I</label>
-                <label><input type="radio" name="killip"> II</label>
-                <label><input type="radio" name="killip"> III</label>
-                <label><input type="radio" name="killip"> IV</label>
-            </div>
-            <div class="result">Estimated in-hospital mortality risk: —</div>
-        </div>
+    <section>
+        <h2>🧠 Advanced Decision Support Summary</h2>
+        <p>Risk-based clinical recommendations:</p>
+        <div id="decisionSupport" style="background:#eef5f9;padding:10px;border:1px solid #777;border-radius:5px;"></div>
+    </section>
 
-        <button onclick="calculateScores()">Calculate Scores</button>
-    </div>
+<script>
+function calculateRisk() {
+    const heart = parseFloat(document.getElementById("heartScore").value) || 0;
+    const timi = parseFloat(document.getElementById("timiScore").value) || 0;
+    const grace = parseFloat(document.getElementById("graceScore").value) || 0;
 
-    <script>
-        function calculateScores() {
-            // Add your scoring logic here
-            alert("Calculation logic to be implemented!");
-        }
-    </script>
+    let heartRisk = heart <= 3 ? "0.9-1.7%" : heart <= 6 ? "12-16.6%" : ">50%";
+    let timiRisk = timi <= 2 ? "5%" : timi <= 4 ? "13-20%" : ">26.5%";
+    let graceRisk = grace < 109 ? "<3%" : grace <= 140 ? "3–8%" : ">8%";
+
+    document.getElementById("riskResult").innerHTML =
+        `<strong>HEART Score Risk:</strong> ${heartRisk}<br>` +
+        `<strong>TIMI Score Risk:</strong> ${timiRisk}<br>` +
+        `<strong>GRACE Score Risk:</strong> ${graceRisk}`;
+}
+
+function provideDecisionSupport() {
+    const heart = parseFloat(document.getElementById("heartScore").value) || 0;
+    const timi = parseFloat(document.getElementById("timiScore").value) || 0;
+    const grace = parseFloat(document.getElementById("graceScore").value) || 0;
+    let suggestions = [];
+
+    if (heart <= 3) {
+        suggestions.push("HEART Score: Low risk. Discharge with follow-up.");
+    } else if (heart <= 6) {
+        suggestions.push("HEART Score: Moderate risk. Observe and use GRACE to refine decision.");
+    } else {
+        suggestions.push("HEART Score: High risk. Early invasive strategy.");
+    }
+
+    if (timi <= 2) {
+        suggestions.push("TIMI Score: Low risk. Consider ischemia-guided approach.");
+    } else if (timi <= 4) {
+        suggestions.push("TIMI Score: Intermediate risk. Invasive strategy may be warranted.");
+    } else {
+        suggestions.push("TIMI Score: High risk. Early invasive approach recommended.");
+    }
+
+    if (grace < 109) {
+        suggestions.push("GRACE Score: Low risk. Non-invasive tests before discharge.");
+    } else if (grace <= 140) {
+        suggestions.push("GRACE Score: Intermediate risk. Invasive vs conservative based on clinical judgment.");
+    } else {
+        suggestions.push("GRACE Score: High risk. Early invasive management within 24h per AHA 2025.");
+    }
+
+    if ((heart >= 4 && heart <= 6) || (timi >= 3 && timi <= 4)) {
+        suggestions.push("Moderate HEART/TIMI: Use GRACE to guide next steps.");
+    }
+
+    if ((heart > 6 || timi > 4) && grace > 140) {
+        suggestions.push("All scores high: Proceed with invasive management.");
+    }
+
+    if ((heart <= 3 && timi <= 2) && grace < 109) {
+        suggestions.push("All scores low: Discharge safely with outpatient follow-up.");
+    }
+
+    if (grace > 140 && (heart <= 3 || timi <= 2)) {
+        suggestions.push("GRACE high despite low HEART/TIMI – cardiology review recommended.");
+    }
+
+    document.getElementById("decisionSupport").innerHTML = "<ul><li>" + suggestions.join("</li><li>") + "</li></ul>";
+}
+</script>
 </body>
 </html>
