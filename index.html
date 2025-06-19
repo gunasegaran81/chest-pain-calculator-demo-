@@ -2,103 +2,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Chest Pain Risk Stratification Tool</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
-        h1 { color: #004080; }
-        label { display: block; margin-top: 10px; }
-        input[type=number] { width: 100px; }
-        section { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
-        button { margin-top: 15px; padding: 8px 12px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chest Pain Risk App (Combined with SI Units)</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 1rem; background-color: #f4f4f4; max-width: 900px; margin: auto; }
+    h1, h2 { color: #333; }
+    section { background: #fff; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    label { display: block; margin: 0.5rem 0; }
+    select, input { margin-left: 0.5rem; }
+    button { padding: 10px; margin-top: 1rem; width: 100%; background: #007bff; color: white; border: none; border-radius: 4px; }
+    .result { margin-top: 1rem; background: #eef; padding: 1rem; border-radius: 5px; }
+  </style>
 </head>
 <body>
-    <h1>Chest Pain Combined Tool</h1>
+  <h1>Chest Pain Risk Calculator</h1>
 
-    <section>
-        <h2>🔢 Input Scores</h2>
-        <label>HEART Score: <input type="number" id="heartScore" min="0" max="10" step="1"></label>
-        <label>TIMI Score: <input type="number" id="timiScore" min="0" max="7" step="1"></label>
-        <label>GRACE Score: <input type="number" id="graceScore" min="0" max="372" step="1"></label>
-        <button onclick="calculateRisk(); provideDecisionSupport()">Calculate Risk</button>
-    </section>
+  <section>
+    <h2>HEART Score</h2>
+    <form id="heartForm">
+      <label>History: 
+        <select>
+          <option value="0">Slightly suspicious (0)</option>
+          <option value="1">Moderately suspicious (1)</option>
+          <option value="2">Highly suspicious (2)</option>
+        </select>
+      </label>
+      <label>ECG: 
+        <select>
+          <option value="0">Normal (0)</option>
+          <option value="1">Non-specific changes (1)</option>
+          <option value="2">Significant ST-depression (2)</option>
+        </select>
+      </label>
+      <label>Age: 
+        <select>
+          <option value="0"><45 (0)</option>
+          <option value="1">45–64 (1)</option>
+          <option value="2">≥65 (2)</option>
+        </select>
+      </label>
+      <label>Risk Factors: 
+        <select>
+          <option value="0">None (0)</option>
+          <option value="1">1–2 (1)</option>
+          <option value="2">≥3 or DM (2)</option>
+        </select>
+      </label>
+      <label>Troponin: 
+        <select>
+          <option value="0">≤ normal limit (0)</option>
+          <option value="1">1–3× normal (1)</option>
+          <option value="2">>3× normal (2)</option>
+        </select>
+      </label>
+    </form>
+    <div class="result" id="heartResult"></div>
+  </section>
 
-    <section>
-        <h2>📈 Risk Percentages</h2>
-        <div id="riskResult" style="padding: 10px; border: 1px solid #aaa; background: #eef;"></div>
-    </section>
+  <section>
+    <h2>TIMI Score</h2>
+    <form id="timiForm">
+      <label><input type="checkbox"/> Age ≥65</label>
+      <label><input type="checkbox"/> ≥3 CAD risk factors</label>
+      <label><input type="checkbox"/> Known CAD (stenosis >50%)</label>
+      <label><input type="checkbox"/> ASA use in past 7 days</label>
+      <label><input type="checkbox"/> ≥2 anginal events in 24h</label>
+      <label><input type="checkbox"/> ST deviation ≥0.5mm</label>
+      <label><input type="checkbox"/> Elevated biomarkers</label>
+    </form>
+    <div class="result" id="timiResult"></div>
+  </section>
 
-    <section>
-        <h2>🧠 Advanced Decision Support Summary</h2>
-        <p>Risk-based clinical recommendations:</p>
-        <div id="decisionSupport" style="background:#eef5f9;padding:10px;border:1px solid #777;border-radius:5px;"></div>
-    </section>
+  <section id="graceSection" style="display:none;">
+    <h2>GRACE Score (Full)</h2>
+    <form id="graceForm">
+      <label>Age: <input type="number" id="age" value="55" /></label>
+      <label>Systolic BP (mmHg): <input type="number" id="sbp" value="120" /></label>
+      <label>Heart Rate (bpm): <input type="number" id="hr" value="80" /></label>
+      <label>Creatinine (μmol/L): <input type="number" id="creatinine" step="1" value="88" /></label>
+      <label>Killip Class:
+        <select id="killip">
+          <option value="1">I</option>
+          <option value="2">II</option>
+          <option value="3">III</option>
+          <option value="4">IV</option>
+        </select>
+      </label>
+      <label>Cardiac Arrest:
+        <select id="arrest">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </label>
+      <label>ST deviation:
+        <select id="st_dev">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </label>
+      <label>Elevated Enzymes:
+        <select id="enzymes">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </label>
+    </form>
+    <div class="result" id="graceResult"></div>
+  </section>
 
-<script>
-function calculateRisk() {
-    const heart = parseFloat(document.getElementById("heartScore").value) || 0;
-    const timi = parseFloat(document.getElementById("timiScore").value) || 0;
-    const grace = parseFloat(document.getElementById("graceScore").value) || 0;
+  <button onclick="calculate()">Calculate Scores</button>
 
-    let heartRisk = heart <= 3 ? "0.9-1.7%" : heart <= 6 ? "12-16.6%" : ">50%";
-    let timiRisk = timi <= 2 ? "5%" : timi <= 4 ? "13-20%" : ">26.5%";
-    let graceRisk = grace < 109 ? "<3%" : grace <= 140 ? "3–8%" : ">8%";
+  <script>
+    function calculate() {
+      const heartSelects = document.querySelectorAll('#heartForm select');
+      let heartScore = 0;
+      heartSelects.forEach(s => heartScore += parseInt(s.value));
+      const heartRisk = heartScore <= 3 ? 'Low (<1.7%)' : heartScore <= 6 ? 'Moderate (12–16.6%)' : 'High (>50%)';
+      document.getElementById('heartResult').innerHTML = `Score: ${heartScore}/10<br>Risk: ${heartRisk}`;
 
-    document.getElementById("riskResult").innerHTML =
-        `<strong>HEART Score Risk:</strong> ${heartRisk}<br>` +
-        `<strong>TIMI Score Risk:</strong> ${timiRisk}<br>` +
-        `<strong>GRACE Score Risk:</strong> ${graceRisk}`;
-}
+      const timiScore = document.querySelectorAll('#timiForm input[type=checkbox]:checked').length;
+      const timiRisk = ['<5%', '5–8%', '8–13%', '13–20%', '20–26%', '26–41%', '41–65%', '>65%'][timiScore] || '>65%';
+      document.getElementById('timiResult').innerHTML = `Score: ${timiScore}/7<br>Risk: ${timiRisk}`;
 
-function provideDecisionSupport() {
-    const heart = parseFloat(document.getElementById("heartScore").value) || 0;
-    const timi = parseFloat(document.getElementById("timiScore").value) || 0;
-    const grace = parseFloat(document.getElementById("graceScore").value) || 0;
-    let suggestions = [];
+      const showGrace = (heartScore >= 4 && heartScore <= 6) || (timiScore >= 3 && timiScore <= 4);
+      document.getElementById('graceSection').style.display = showGrace ? 'block' : 'none';
 
-    if (heart <= 3) {
-        suggestions.push("HEART Score: Low risk. Discharge with follow-up.");
-    } else if (heart <= 6) {
-        suggestions.push("HEART Score: Moderate risk. Observe and use GRACE to refine decision.");
-    } else {
-        suggestions.push("HEART Score: High risk. Early invasive strategy.");
+      if (showGrace) {
+        const age = parseInt(document.getElementById('age').value);
+        const sbp = parseInt(document.getElementById('sbp').value);
+        const hr = parseInt(document.getElementById('hr').value);
+        const creat = parseFloat(document.getElementById('creatinine').value) / 88.4;
+        const killip = parseInt(document.getElementById('killip').value);
+        const arrest = parseInt(document.getElementById('arrest').value);
+        const st_dev = parseInt(document.getElementById('st_dev').value);
+        const enzymes = parseInt(document.getElementById('enzymes').value);
+
+        let score = 0;
+        score += Math.floor(age * 0.8);
+        score += hr > 150 ? 24 : hr > 100 ? 13 : hr > 70 ? 7 : 0;
+        score += sbp < 80 ? 30 : sbp < 100 ? 20 : sbp < 120 ? 10 : 0;
+        score += creat > 2.0 ? 28 : creat > 1.5 ? 20 : creat > 1.2 ? 10 : 0;
+        score += [0, 20, 39, 59][killip - 1];
+        score += arrest ? 39 : 0;
+        score += st_dev ? 28 : 0;
+        score += enzymes ? 14 : 0;
+
+        let graceRisk = score < 109 ? "<1%" : score < 140 ? "1–3%" : ">3%";
+        document.getElementById('graceResult').innerHTML = `Score: ${score}<br>In-Hospital Mortality Risk: ${graceRisk}`;
+      }
     }
+  </script>
 
-    if (timi <= 2) {
-        suggestions.push("TIMI Score: Low risk. Consider ischemia-guided approach.");
-    } else if (timi <= 4) {
-        suggestions.push("TIMI Score: Intermediate risk. Invasive strategy may be warranted.");
-    } else {
-        suggestions.push("TIMI Score: High risk. Early invasive approach recommended.");
-    }
-
-    if (grace < 109) {
-        suggestions.push("GRACE Score: Low risk. Non-invasive tests before discharge.");
-    } else if (grace <= 140) {
-        suggestions.push("GRACE Score: Intermediate risk. Invasive vs conservative based on clinical judgment.");
-    } else {
-        suggestions.push("GRACE Score: High risk. Early invasive management within 24h per AHA 2025.");
-    }
-
-    if ((heart >= 4 && heart <= 6) || (timi >= 3 && timi <= 4)) {
-        suggestions.push("Moderate HEART/TIMI: Use GRACE to guide next steps.");
-    }
-
-    if ((heart > 6 || timi > 4) && grace > 140) {
-        suggestions.push("All scores high: Proceed with invasive management.");
-    }
-
-    if ((heart <= 3 && timi <= 2) && grace < 109) {
-        suggestions.push("All scores low: Discharge safely with outpatient follow-up.");
-    }
-
-    if (grace > 140 && (heart <= 3 || timi <= 2)) {
-        suggestions.push("GRACE high despite low HEART/TIMI – cardiology review recommended.");
-    }
-
-    document.getElementById("decisionSupport").innerHTML = "<ul><li>" + suggestions.join("</li><li>") + "</li></ul>";
-}
-</script>
+<section>
+  <h2>📋 Clinical Guidance Based on GRACE Score (2025 AHA/ACC)</h2>
+  <p><strong>High GRACE Score (>140)</strong><br>
+    ➤ Recommended: <strong>Early Invasive Strategy</strong> (angiography within 24h)<br>
+    ➤ If invasive is not feasible: initiate <strong>aggressive medical therapy</strong> (Aspirin, P2Y₁₂ inhibitor, anticoagulation, statins, beta-blocker, ACEI/ARB), and perform <strong>non-invasive testing</strong> (e.g., stress echo, SPECT, CTCA) before discharge.
+  </p>
+  <p><strong>Intermediate GRACE Score (109–140)</strong><br>
+    ➤ Consider <strong>invasive approach</strong> OR <strong>ischemia-guided strategy</strong> based on patient stability, comorbidities, and availability.
+  </p>
+  <p><strong>Low GRACE Score (<109)</strong><br>
+    ➤ <strong>Ischemia-guided management</strong> is appropriate. Can use <strong>non-invasive testing</strong> (e.g., stress test or outpatient CTCA) for further evaluation if needed.
+  </p>
+</section>
 </body>
 </html>
