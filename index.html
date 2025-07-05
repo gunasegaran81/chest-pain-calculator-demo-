@@ -1,141 +1,135 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Chest Pain Risk Stratification Tool (AHA 2025)</title>
+<title>HEART & TIMI Integrated System</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { color: #003366; }
+    label { display: block; margin-top: 10px; }
+    input, select { margin-top: 5px; margin-bottom: 10px; }
+    .result { margin-top: 20px; font-weight: bold; padding: 10px; border: 1px solid #ccc; width: fit-content; }
+    .low { background-color: #d4edda; color: #155724; }
+    .moderate { background-color: #fff3cd; color: #856404; }
+    .high { background-color: #f8d7da; color: #721c24; }
+    .flowchart { margin-top: 30px; padding: 15px; border: 2px dashed #999; background-color: #f0f8ff; }
+    button { margin-top: 15px; padding: 8px 16px; }
+</style>
 </head>
 <body>
-<h1>Chest Pain Risk Tool (Integrated with AHA 2025 Guidance)</h1>
 
-<section>
-  <h2>HEART Score</h2>
-  <label>History: <select id="heartHistory"><option value="0">Slightly suspicious</option><option value="1">Moderately suspicious</option><option value="2">Highly suspicious</option></select></label>
-  <label>ECG: <select id="heartECG"><option value="0">Normal</option><option value="1">Non-specific changes</option><option value="2">Significant ST deviation</option></select></label>
-  <label>Age: <select id="heartAge"><option value="0">Under 45</option><option value="1">45–64</option><option value="2">65 or older</option></select></label>
-  <label>Risk Factors: <select id="heartRisk"><option value="0">None</option><option value="1">1–2</option><option value="2">≥3 or known CAD</option></select></label>
-  <label>Troponin: <select id="heartTroponin"><option value="0">Normal</option><option value="1">1–3x</option><option value="2">>3x</option></select></label>
-  <div id="heartResult"></div>
-</section>
+<h2>HEART & TIMI Integrated Risk Assessment</h2>
 
-<section>
-  <h2>TIMI Score</h2>
-  <label><input type="checkbox" class="timi" value="1"> Age ≥65</label>
-  <label><input type="checkbox" class="timi" value="1"> ≥3 CAD risk factors</label>
-  <label><input type="checkbox" class="timi" value="1"> Known CAD ≥50%</label>
-  <label><input type="checkbox" class="timi" value="1"> ASA use past 7 days</label>
-  <label><input type="checkbox" class="timi" value="1"> ≥2 anginal episodes in 24h</label>
-  <label><input type="checkbox" class="timi" value="1"> ST deviation ≥0.5mm</label>
-  <label><input type="checkbox" class="timi" value="1"> Elevated biomarkers</label>
-  <div id="timiResult"></div>
-</section>
+<form id="riskForm">
+    <label>Age:
+        <input type="number" id="age" required>
+    </label>
 
-<section>
-  <h2>GRACE Score (SI Units)</h2>
-  <label>Age: <input type="number" id="age" value="55"></label>
-  <label>SBP (mmHg): <input type="number" id="sbp" value="120"></label>
-  <label>Heart Rate (bpm): <input type="number" id="hr" value="80"></label>
-  <label>Creatinine (µmol/L): <input type="number" id="creatinine" value="88"></label>
-  <label>Killip Class: <select id="killip"><option value="1">I</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option></select></label>
-  <label>Cardiac Arrest: <select id="arrest"><option value="0">No</option><option value="1">Yes</option></select></label>
-  <label>ST deviation: <select id="st_dev"><option value="0">No</option><option value="1">Yes</option></select></label>
-  <label>Elevated Enzymes: <select id="enzymes"><option value="0">No</option><option value="1">Yes</option></select></label>
-  <div id="graceResult"></div>
-</section>
+    <label>Risk Factors (tick all that apply):</label>
+    <input type="checkbox" class="rf"> Hypertension
+    <input type="checkbox" class="rf"> Diabetes
+    <input type="checkbox" class="rf"> Hyperlipidemia
+    <input type="checkbox" class="rf"> Smoker
+    <input type="checkbox" class="rf"> Family Hx CAD
+    <input type="checkbox" class="rf"> Obesity
 
-<button onclick="calculate()">Calculate Risk & Recommendations</button>
+    <label>Known CAD (>50% stenosis):
+        <select id="knownCAD">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </label>
 
-<section>
-  <h2>🧠 AHA 2025 Decision Support</h2>
-  <div id="decisionSupport"></div>
-</section>
+    <label>Aspirin use last 7 days:
+        <select id="aspirin">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </label>
 
-<section>
-  <h2>📋 ED Medical Therapy (AHA 2025)</h2>
-  <ul>
-    <li>Aspirin: Immediate loading dose</li>
-    <li>P2Y12 Inhibitor: Ticagrelor/Prasugrel within 24h</li>
-    <li>Anticoagulation: Heparin/Enoxaparin/Fondaparinux</li>
-    <li>Nitroglycerin unless hypotensive</li>
-    <li>Beta-blocker if no contraindications</li>
-    <li>High-intensity Statin early</li>
-  </ul>
-</section>
+    <label>Recent angina (≥2 episodes/24hrs):
+        <select id="angina">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </label>
+
+    <label>ECG findings:
+        <select id="ecg">
+            <option value="0">Normal</option>
+            <option value="1">Non-specific changes</option>
+            <option value="2">Significant ST depression</option>
+        </select>
+    </label>
+
+    <label>Troponin result:
+        <select id="troponin">
+            <option value="0">Normal</option>
+            <option value="1">Elevated</option>
+        </select>
+    </label>
+
+    <label>History (subjective assessment):
+        <select id="history">
+            <option value="0">Non-suggestive</option>
+            <option value="1">Mildly suggestive</option>
+            <option value="2">Highly suggestive</option>
+        </select>
+    </label>
+
+    <button type="button" onclick="calculate()">Calculate & Show Flowchart</button>
+    <button type="button" onclick="window.print()">Print</button>
+</form>
+
+<div id="output" class="result"></div>
+<div id="flowchart" class="flowchart" style="display:none;">
+    <h3>Chest Pain Clinical Pathway:</h3>
+    <ul>
+        <li><strong>HEART 0–3 (Low Risk) & TIMI 0–1:</strong> Consider safe discharge with follow-up</li>
+        <li><strong>HEART 4–6 or TIMI 2–3:</strong> Observation, serial ECG & troponins</li>
+        <li><strong>HEART ≥7 or TIMI ≥4:</strong> Admit, urgent cardiology review</li>
+    </ul>
+    <p>Always consider clinical judgement in final decision-making.</p>
+</div>
 
 <script>
 function calculate() {
-  let heart = parseInt(document.getElementById("heartHistory").value) +
-              parseInt(document.getElementById("heartECG").value) +
-              parseInt(document.getElementById("heartAge").value) +
-              parseInt(document.getElementById("heartRisk").value) +
-              parseInt(document.getElementById("heartTroponin").value);
-  document.getElementById("heartResult").innerText = "HEART Score: " + heart;
+    let age = parseInt(document.getElementById('age').value);
+    let rfCount = document.querySelectorAll('.rf:checked').length;
+    let knownCAD = parseInt(document.getElementById('knownCAD').value);
+    let aspirin = parseInt(document.getElementById('aspirin').value);
+    let angina = parseInt(document.getElementById('angina').value);
+    let ecg = parseInt(document.getElementById('ecg').value);
+    let troponin = parseInt(document.getElementById('troponin').value);
+    let history = parseInt(document.getElementById('history').value);
 
-  let timi = document.querySelectorAll(".timi:checked").length;
-  document.getElementById("timiResult").innerText = "TIMI Score: " + timi;
+    // HEART Score
+    let heart = history + ecg;
+    heart += (age >= 65) ? 2 : (age >= 45) ? 1 : 0;
+    heart += (rfCount >= 3) ? 2 : (rfCount >= 1) ? 1 : 0;
+    heart += (troponin == 1) ? 2 : 0;
 
-  let age = parseInt(document.getElementById("age").value);
-  let sbp = parseInt(document.getElementById("sbp").value);
-  let hr = parseInt(document.getElementById("hr").value);
-  let creat = parseFloat(document.getElementById("creatinine").value) / 88.4;
-  let killip = parseInt(document.getElementById("killip").value);
-  let arrest = parseInt(document.getElementById("arrest").value);
-  let st_dev = parseInt(document.getElementById("st_dev").value);
-  let enzymes = parseInt(document.getElementById("enzymes").value);
+    // TIMI Score
+    let timi = 0;
+    timi += (age >= 65) ? 1 : 0;
+    timi += (rfCount >= 3) ? 1 : 0;
+    timi += knownCAD;
+    timi += aspirin;
+    timi += angina;
+    timi += (ecg == 2) ? 1 : 0;
+    timi += troponin;
 
-  let grace = Math.floor(age * 0.8);
-  grace += hr > 150 ? 24 : hr > 100 ? 13 : hr > 70 ? 7 : 0;
-  grace += sbp < 80 ? 30 : sbp < 100 ? 20 : sbp < 120 ? 10 : 0;
-  grace += creat > 2.0 ? 28 : creat > 1.5 ? 20 : creat > 1.2 ? 10 : 0;
-  grace += [0, 20, 39, 59][killip - 1];
-  grace += arrest ? 39 : 0;
-  grace += st_dev ? 28 : 0;
-  grace += enzymes ? 14 : 0;
-  document.getElementById("graceResult").innerText = "GRACE Score: " + grace;
+    // Color coding
+    let heartClass = heart <= 3 ? 'low' : (heart <= 6 ? 'moderate' : 'high');
+    let timiClass = timi <= 1 ? 'low' : (timi <= 3 ? 'moderate' : 'high');
 
-  let decision = [];
-  if (heart <= 3) decision.push("HEART: Low risk - Discharge reasonable.");
-  else if (heart <= 6) decision.push("HEART: Moderate risk - Observe & refine.");
-  else decision.push("HEART: High risk - Early invasive strategy.");
+    document.getElementById('output').innerHTML =
+        `<div class="${heartClass}">HEART Score: <strong>${heart}</strong></div>
+         <div class="${timiClass}">TIMI Score: <strong>${timi}</strong></div>`;
 
-  if (timi <= 2) decision.push("TIMI: Low risk - Conservative strategy.");
-  else if (timi <= 4) decision.push("TIMI: Intermediate - Consider early invasive.");
-  else decision.push("TIMI: High risk - Early invasive recommended.");
-
-  if (grace < 109) decision.push("GRACE: Low risk - Non-invasive testing reasonable.");
-  else if (grace <= 140) decision.push("GRACE: Intermediate - Invasive vs conservative based on judgement.");
-  else decision.push("GRACE: High risk - Early invasive approach (<24h).");
-
-  document.getElementById("decisionSupport").innerHTML = "<ul><li>" + decision.join("</li><li>") + "</li></ul>";
+    document.getElementById('flowchart').style.display = 'block';
 }
 </script>
-
-
-<section>
-  <h2>Beta-Blocker Contraindications</h2>
-  <ul>
-    <li>Severe bradycardia (HR &lt;50 bpm)</li>
-    <li>Symptomatic hypotension</li>
-    <li>Signs of acute heart failure or pulmonary edema</li>
-    <li>Severe asthma or active bronchospasm</li>
-    <li>Second- or third-degree heart block without pacemaker</li>
-    <li>Cardiogenic shock</li>
-  </ul>
-</section>
-
-<section>
-  <h2>High-Intensity Statin Therapy Guidance</h2>
-  <ul>
-    <li>Recommended for all ACS patients regardless of LDL levels</li>
-    <li>Examples:</li>
-    <ul>
-      <li>Atorvastatin 40–80 mg daily</li>
-      <li>Rosuvastatin 20–40 mg daily</li>
-    </ul>
-    <li>Initiate as early as possible during hospital stay</li>
-    <li>Assess for statin intolerance or contraindications</li>
-  </ul>
-</section>
 
 </body>
 </html>
