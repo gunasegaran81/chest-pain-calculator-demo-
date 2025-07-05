@@ -20,6 +20,7 @@
     .print-btn { background-color: #28a745; }
     table { width: 100%; border-collapse: collapse; }
     td { padding: 4px; vertical-align: top; }
+    small { display:block; font-size:12px; margin-top:4px; line-height: 1.4; }
 </style>
 </head>
 <body>
@@ -82,13 +83,19 @@
         </select>
     </label>
 
-    <label>Chest Pain Type (History): 
+    <label>History (Chest Pain Type): 
         <select id="history">
-            <option value="2">Typical (Cardiac) Chest Pain - Substernal, exertional, relieved by rest/GTN</option>
-            <option value="1">Atypical Chest Pain - Missing one typical feature</option>
-            <option value="0">Non-cardiac Chest Pain - Explained by musculoskeletal/pleuritic/other</option>
+            <option value="2">Highly Suggestive</option>
+            <option value="1">Mildly Suggestive</option>
+            <option value="0">Non-suggestive</option>
         </select>
     </label>
+    <small>
+        <strong>Reference:</strong><br>
+        Highly Suggestive: Typical cardiac chest pain (substernal, exertional, relieved by rest or GTN)<br>
+        Mildly Suggestive: Atypical chest pain (missing one typical feature)<br>
+        Non-suggestive: Non-cardiac chest pain (musculoskeletal, pleuritic, other cause)
+    </small>
 
     <button type="button" class="calculate-btn" onclick="calculate()">Calculate</button>
     <button type="button" class="print-btn" onclick="window.print()">Print</button>
