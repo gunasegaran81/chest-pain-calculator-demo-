@@ -2,74 +2,153 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HEART & TIMI Integrated System</title>
+<title>HEART & TIMI Compact Version</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h2 { color: #003366; }
-    label { display: block; margin-top: 10px; }
-    input, select { margin-top: 5px; margin-bottom: 10px; }
-    .result { margin-top: 20px; font-weight: bold; padding: 10px; border: 1px solid #ccc; width: fit-content; }
-    .low { background-color: #d4edda; color: #155724; }
-    .moderate { background-color: #fff3cd; color: #856404; }
-    .high { background-color: #f8d7da; color: #721c24; }
-    .flowchart { margin-top: 30px; padding: 15px; border: 2px dashed #999; background-color: #f0f8ff; }
-    button { margin-top: 15px; padding: 8px 16px; }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 5px;
+        font-size: 14px;
+        background-color: #f9f9f9;
+        color: #333;
+    }
+    h2 {
+        color: #004085;
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    label {
+        display: block;
+        margin-top: 5px;
+        font-weight: bold;
+        font-size: 13px;
+    }
+    input, select {
+        width: 100%;
+        padding: 6px;
+        margin-top: 2px;
+        margin-bottom: 5px;
+        font-size: 14px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    .checkbox-group {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .checkbox-group label {
+        display: block;
+        margin-bottom: 3px;
+        font-weight: normal;
+        font-size: 13px;
+    }
+    .result {
+        margin-top: 10px;
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 16px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .low {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .moderate {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .high {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .flowchart {
+        margin-top: 10px;
+        padding: 8px;
+        border: 1px dashed #999;
+        background-color: #e0f7fa;
+        border-radius: 4px;
+        font-size: 13px;
+    }
+    .remark {
+        margin-top: 5px;
+        font-size: 13px;
+        color: #dc3545;
+    }
+    button {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        margin-top: 5px;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+    }
+    .calculate-btn {
+        background-color: #007bff;
+    }
+    .print-btn {
+        background-color: #28a745;
+    }
 </style>
 </head>
 <body>
 
-<h2>HEART & TIMI Integrated Risk Assessment</h2>
+<h2>HEART & TIMI Assessment</h2>
 
 <form id="riskForm">
     <label>Age:
         <input type="number" id="age" required>
     </label>
 
-    <label>Risk Factors (tick all that apply):</label>
-    <input type="checkbox" class="rf"> Hypertension
-    <input type="checkbox" class="rf"> Diabetes
-    <input type="checkbox" class="rf"> Hyperlipidemia
-    <input type="checkbox" class="rf"> Smoker
-    <input type="checkbox" class="rf"> Family Hx CAD
-    <input type="checkbox" class="rf"> Obesity
+    <label>Risk Factors:</label>
+    <div class="checkbox-group">
+        <label><input type="checkbox" class="rf"> Hypertension</label>
+        <label><input type="checkbox" class="rf"> Diabetes</label>
+        <label><input type="checkbox" class="rf"> Hyperlipidemia</label>
+        <label><input type="checkbox" class="rf"> Smoker</label>
+        <label><input type="checkbox" class="rf"> Family Hx CAD</label>
+        <label><input type="checkbox" class="rf"> Obesity</label>
+    </div>
 
-    <label>Known CAD (>50% stenosis):
+    <label>Known CAD:
         <select id="knownCAD">
             <option value="0">No</option>
             <option value="1">Yes</option>
         </select>
     </label>
 
-    <label>Aspirin use last 7 days:
+    <label>Aspirin 7 days:
         <select id="aspirin">
             <option value="0">No</option>
             <option value="1">Yes</option>
         </select>
     </label>
 
-    <label>Recent angina (≥2 episodes/24hrs):
+    <label>Angina ≥2/24h:
         <select id="angina">
             <option value="0">No</option>
             <option value="1">Yes</option>
         </select>
     </label>
 
-    <label>ECG findings:
+    <label>ECG:
         <select id="ecg">
             <option value="0">Normal</option>
-            <option value="1">Non-specific changes</option>
-            <option value="2">Significant ST depression</option>
+            <option value="1">Non-specific</option>
+            <option value="2">ST depression</option>
         </select>
     </label>
 
-    <label>Troponin result:
+    <label>Troponin:
         <select id="troponin">
-            <option value="0">Normal</option>
+            <option value="0">Normal (or not done)</option>
             <option value="1">Elevated</option>
         </select>
     </label>
 
-    <label>History (subjective assessment):
+    <label>History:
         <select id="history">
             <option value="0">Non-suggestive</option>
             <option value="1">Mildly suggestive</option>
@@ -77,19 +156,18 @@
         </select>
     </label>
 
-    <button type="button" onclick="calculate()">Calculate & Show Flowchart</button>
-    <button type="button" onclick="window.print()">Print</button>
+    <button type="button" class="calculate-btn" onclick="calculate()">Calculate</button>
+    <button type="button" class="print-btn" onclick="window.print()">Print</button>
 </form>
 
 <div id="output" class="result"></div>
 <div id="flowchart" class="flowchart" style="display:none;">
-    <h3>Chest Pain Clinical Pathway:</h3>
-    <ul>
-        <li><strong>HEART 0–3 (Low Risk) & TIMI 0–1:</strong> Consider safe discharge with follow-up</li>
-        <li><strong>HEART 4–6 or TIMI 2–3:</strong> Observation, serial ECG & troponins</li>
-        <li><strong>HEART ≥7 or TIMI ≥4:</strong> Admit, urgent cardiology review</li>
+    <strong>Pathway:</strong>
+    <ul style="padding-left:15px;">
+        <li>HEART 0–3 & TIMI 0–1: Safe discharge</li>
+        <li>HEART 4–6 or TIMI 2–3: Observation</li>
+        <li>HEART ≥7 or TIMI ≥4: Admit</li>
     </ul>
-    <p>Always consider clinical judgement in final decision-making.</p>
 </div>
 
 <script>
@@ -103,13 +181,11 @@ function calculate() {
     let troponin = parseInt(document.getElementById('troponin').value);
     let history = parseInt(document.getElementById('history').value);
 
-    // HEART Score
     let heart = history + ecg;
     heart += (age >= 65) ? 2 : (age >= 45) ? 1 : 0;
     heart += (rfCount >= 3) ? 2 : (rfCount >= 1) ? 1 : 0;
     heart += (troponin == 1) ? 2 : 0;
 
-    // TIMI Score
     let timi = 0;
     timi += (age >= 65) ? 1 : 0;
     timi += (rfCount >= 3) ? 1 : 0;
@@ -119,13 +195,14 @@ function calculate() {
     timi += (ecg == 2) ? 1 : 0;
     timi += troponin;
 
-    // Color coding
     let heartClass = heart <= 3 ? 'low' : (heart <= 6 ? 'moderate' : 'high');
     let timiClass = timi <= 1 ? 'low' : (timi <= 3 ? 'moderate' : 'high');
 
+    let remark = troponin === 0 ? "<div class='remark'>* Troponin not taken or pending.</div>" : "";
+
     document.getElementById('output').innerHTML =
-        `<div class="${heartClass}">HEART Score: <strong>${heart}</strong></div>
-         <div class="${timiClass}">TIMI Score: <strong>${timi}</strong></div>`;
+        `<div class="${heartClass}">HEART: <strong>${heart}</strong> | TIMI: <strong>${timi}</strong></div>` +
+        remark;
 
     document.getElementById('flowchart').style.display = 'block';
 }
