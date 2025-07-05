@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HEART & TIMI Compact Version</title>
+<title>HEART & TIMI Detailed Troponin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     body {
@@ -95,7 +95,7 @@
 </head>
 <body>
 
-<h2>HEART & TIMI Assessment</h2>
+<h2>HEART & TIMI Risk Assessment</h2>
 
 <form id="riskForm">
     <label>Age:
@@ -144,7 +144,8 @@
     <label>Troponin:
         <select id="troponin">
             <option value="0">Normal (or not done)</option>
-            <option value="1">Elevated</option>
+            <option value="1">1–3x normal</option>
+            <option value="2">>3x normal</option>
         </select>
     </label>
 
@@ -184,7 +185,7 @@ function calculate() {
     let heart = history + ecg;
     heart += (age >= 65) ? 2 : (age >= 45) ? 1 : 0;
     heart += (rfCount >= 3) ? 2 : (rfCount >= 1) ? 1 : 0;
-    heart += (troponin == 1) ? 2 : 0;
+    heart += troponin;
 
     let timi = 0;
     timi += (age >= 65) ? 1 : 0;
@@ -193,7 +194,7 @@ function calculate() {
     timi += aspirin;
     timi += angina;
     timi += (ecg == 2) ? 1 : 0;
-    timi += troponin;
+    timi += (troponin > 0) ? 1 : 0;
 
     let heartClass = heart <= 3 ? 'low' : (heart <= 6 ? 'moderate' : 'high');
     let timiClass = timi <= 1 ? 'low' : (timi <= 3 ? 'moderate' : 'high');
