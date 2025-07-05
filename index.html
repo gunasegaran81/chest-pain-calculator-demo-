@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HEART & TIMI ECG Corrected</title>
+<title>HEART & TIMI Risk Assessment</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     body { font-family: Arial, sans-serif; margin: 5px; font-size: 14px; background-color: #f9f9f9; color: #333; }
@@ -71,11 +71,11 @@
         </select>
     </label>
 
-    <label>History (subjective assessment): 
+    <label>Chest Pain Type (History): 
         <select id="history">
-            <option value="0">Non-suggestive</option>
-            <option value="1">Mildly suggestive</option>
-            <option value="2">Highly suggestive</option>
+            <option value="2">Typical (Cardiac) Chest Pain - Substernal, exertional, relieved by rest/GTN</option>
+            <option value="1">Atypical Chest Pain - Missing one typical feature</option>
+            <option value="0">Non-cardiac Chest Pain - Explained by musculoskeletal/pleuritic/other</option>
         </select>
     </label>
 
@@ -105,7 +105,7 @@ function calculate() {
     let troponin = parseInt(document.getElementById('troponin').value);
     let history = parseInt(document.getElementById('history').value);
 
-    // ECG contribution
+    // ECG scoring: HEART 1 for non-specific, 2 for ST depression; TIMI 1 for ST depression only
     let ecgHeart = (ecg === 1) ? 1 : (ecg === 2) ? 2 : 0;
     let ecgTimi = (ecg === 2) ? 1 : 0;
 
