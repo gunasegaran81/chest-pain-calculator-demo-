@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>HEART & TIMI Detailed Troponin</title>
+<title>HEART & TIMI Aligned Risk Factors</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     body {
@@ -24,7 +24,7 @@
         font-weight: bold;
         font-size: 13px;
     }
-    input, select {
+    input[type="number"], select {
         width: 100%;
         padding: 6px;
         margin-top: 2px;
@@ -34,14 +34,23 @@
         border: 1px solid #ccc;
     }
     .checkbox-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 5px;
         margin-top: 5px;
         margin-bottom: 5px;
     }
-    .checkbox-group label {
-        display: block;
-        margin-bottom: 3px;
-        font-weight: normal;
+    .checkbox-item {
+        background: #fff;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
         font-size: 13px;
+    }
+    .checkbox-item input {
+        margin-right: 5px;
     }
     .result {
         margin-top: 10px;
@@ -104,12 +113,12 @@
 
     <label>Risk Factors:</label>
     <div class="checkbox-group">
-        <label><input type="checkbox" class="rf"> Hypertension</label>
-        <label><input type="checkbox" class="rf"> Diabetes</label>
-        <label><input type="checkbox" class="rf"> Hyperlipidemia</label>
-        <label><input type="checkbox" class="rf"> Smoker</label>
-        <label><input type="checkbox" class="rf"> Family Hx CAD</label>
-        <label><input type="checkbox" class="rf"> Obesity</label>
+        <div class="checkbox-item"><input type="checkbox" class="rf"> Hypertension</div>
+        <div class="checkbox-item"><input type="checkbox" class="rf"> Diabetes</div>
+        <div class="checkbox-item"><input type="checkbox" class="rf"> Hyperlipidemia</div>
+        <div class="checkbox-item"><input type="checkbox" class="rf"> Smoker</div>
+        <div class="checkbox-item"><input type="checkbox" class="rf"> Family Hx CAD</div>
+        <div class="checkbox-item"><input type="checkbox" class="rf"> Obesity</div>
     </div>
 
     <label>Known CAD:
