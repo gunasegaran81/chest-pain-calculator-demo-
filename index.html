@@ -21,6 +21,7 @@
     table { width: 100%; border-collapse: collapse; }
     td { padding: 5px; vertical-align: top; }
     small { display:block; font-size:12px; margin-top:4px; line-height: 1.4; }
+    #viewCount { margin-top: 10px; font-size: 13px; text-align: center; color: #555; }
 </style>
 </head>
 <body>
@@ -112,6 +113,8 @@
     </ul>
 </div>
 
+<div id="viewCount"></div>
+
 <script>
 function calculate() {
     let age = parseInt(document.getElementById('age').value);
@@ -151,6 +154,12 @@ function calculate() {
 
     document.getElementById('flowchart').style.display = 'block';
 }
+
+// View Counter using localStorage
+let views = localStorage.getItem('viewCounter') || 0;
+views++;
+localStorage.setItem('viewCounter', views);
+document.getElementById('viewCount').innerText = "Page views on this device: " + views;
 </script>
 
 </body>
